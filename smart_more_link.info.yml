@@ -1,0 +1,5 @@
+name: Smart read more link
+description: Formatter that adds a "read-more" link only when teaser text differs from full.
+core: 8.x
+type: module
+package: Fields

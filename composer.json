@@ -1,0 +1,20 @@
+{
+    "name": "alfaguru/smart_more_link",
+    "description": "Dynamic read more link for text fields.",
+    "type": "drupal-module",
+    "homepage": "https://github.com/alfaguru/smart_more_link",
+    "authors": [
+        {
+            "name": "Alfred Armstrong (alfaguru)",
+            "homepage": "https://www.drupal.org/u/alfaguru",
+            "role": "Maintainer"
+        },
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/alfaguru/smart_more_link/issues",
+        "source": "https://github.com/alfaguru/smart_more_link"
+    },
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev"
+}
