@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter;
 use Drupal\text\Plugin\Field\FieldFormatter\TextSummaryOrTrimmedFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,11 +38,28 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
    */
   protected $defaultFormatter;
 
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, PluginManagerInterface $pluginManager) {
+  /**
+   * @var RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * SmartMoreLinkFormatter constructor.
+   *
+   * @param $plugin_id
+   * @param $plugin_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param array $settings
+   * @param $label
+   * @param $view_mode
+   * @param array $third_party_settings
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, PluginManagerInterface $pluginManager, RendererInterface $renderer) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    /**
-     * Ideally would build these using some factory method so they could be mocked.
-     */
     $this->summaryFormatter = $pluginManager->createInstance(
       'text_summary_or_trimmed', [
         'field_definition' => $field_definition,
@@ -60,6 +78,7 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
         'third_party_settings' => $third_party_settings
       ]
     );
+    $this->renderer = $renderer;
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -71,7 +90,8 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('plugin.manager.field.formatter')
+      $container->get('plugin.manager.field.formatter'),
+      $container->get('renderer')
     );
   }
 
@@ -89,9 +109,8 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = $this->summaryFormatter->viewElements($items, $langcode);
     $defaults = $this->defaultFormatter->viewElements($items, $langcode);
-    $elementsClone = $elements;
-    $elementsMarkup = render($elementsClone);
-    $defaultsMarkup = render($defaults);
+    $elementsMarkup = $this->renderer->render($elements);
+    $defaultsMarkup = $this->renderer->render($defaults);
     $readMore = (string)$elementsMarkup !== (string)$defaultsMarkup;
     if ($readMore) {
       $entity = $items->getEntity();
