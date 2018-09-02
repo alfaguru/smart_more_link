@@ -127,7 +127,7 @@ class SmartMoreLinkTest extends BrowserTestBase {
   protected function paragraphs($count = 12) {
     $result = [];
     for ($i = 0; $i <  $count; $i++) {
-      $result[] = $this->getRandomGenerator()->sentences(25, TRUE);
+      $result[] = $this->getRandomGenerator()->sentences(10);
     }
     return $result;
   }

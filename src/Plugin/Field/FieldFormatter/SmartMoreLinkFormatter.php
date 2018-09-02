@@ -109,7 +109,8 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = $this->summaryFormatter->viewElements($items, $langcode);
     $defaults = $this->defaultFormatter->viewElements($items, $langcode);
-    $elementsMarkup = $this->renderer->render($elements);
+    $elements_copy = $elements;
+    $elementsMarkup = $this->renderer->render($elements_copy);
     $defaultsMarkup = $this->renderer->render($defaults);
     $readMore = (string)$elementsMarkup !== (string)$defaultsMarkup;
     if ($readMore) {
