@@ -121,7 +121,7 @@ class SmartMoreLinkFormatter extends FormatterBase implements ContainerFactoryPl
        */
       $node_title_stripped = strip_tags($entity->label());
       $links['body-readmore'] = [
-        'title' => t('Read more<span class="visually-hidden"> about @title</span>', [
+        'title' => $this->t('Read more<span class="visually-hidden"> about @title</span>', [
           '@title' => $node_title_stripped,
         ]),
         'url' => $entity->urlInfo(),
